@@ -23,29 +23,28 @@ function getRandomPrime() {
 
 
 function generateKeys() {
-    let p = getRandomPrime(); 
-    let q;
-    do {
-        q = getRandomPrime();
-    } while (q === p);
+  let p = getRandomPrime(); 
+  let q;
+  do {
+    q = getRandomPrime();
+  } while (q === p);
 
-    n = p * q;
-    const phi = (p - 1n) * (q - 1n);
+  n = p * q;
+  const phi = (p - 1n) * (q - 1n);
 
-    e = 101n;
-    while (gcd(e, phi) !== 1n && e < 1000n) {
+  e = 101n;
+  while (gcd(e, phi) !== 1n && e < 1000n) {
     e += 2n;
-    }
+  }
 
-    d = modInverse(e, phi);
+  d = modInverse(e, phi);
+  document.getElementById('private_key').value = d.toString();
+  document.getElementById('public_key_e').value = e.toString();
+  listKeyn = document.querySelectorAll('.public_key_n');
+  for(let key of listKeyn){
+    key.value = n.toString();
+  }
 
-    document.getElementById('private_key').value = d.toString();
-    document.getElementById('public_key_e').value = e.toString();
-    listKeyn = document.querySelectorAll('.public_key_n');
-    for(let key of listKeyn){
-      console.log(key)
-      key.value = n.toString();
-    }
 }
 
 function simpleHash(content, nLimit) {
@@ -59,6 +58,12 @@ function simpleHash(content, nLimit) {
 function signFile() {
   const fileInput = document.getElementById('file');
   const file = fileInput.files[0];
+  d = BigInt(document.getElementById('private_key').value)
+  e = BigInt(document.getElementById('public_key_e').value)
+  listKeyn = document.querySelectorAll('.public_key_n');
+  for(let key of listKeyn){
+    n = BigInt(key.value)
+  }
 
   if (!file || !d || !n) {
     alert("Hãy tạo khóa và chọn file trước!");
