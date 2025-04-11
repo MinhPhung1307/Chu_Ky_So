@@ -64,9 +64,36 @@ function signFile() {
   for(let key of listKeyn){
     n = BigInt(key.value)
   }
-
   if (!file || !d || !n) {
     alert("Hãy tạo khóa và chọn file trước!");
+    return;
+  }
+
+  // Kiểm tra khóa có hợp lệ không
+  if (d <= 0n || e <= 0n || n <= 0n) {
+    alert("Khóa không hợp lệ: d, e, và n phải là số nguyên dương!");
+    return;
+  }
+
+  if (d >= n || e >= n) {
+    alert("Khóa không hợp lệ: d và e phải nhỏ hơn n!");
+    return;
+  }
+
+  // Kiểm tra xem e có hợp lệ không (phải là số dương nhỏ, thường là 101 hoặc các số lẻ nhỏ)
+  if (e < 1n || e > 1000n) {
+    alert("Khóa không hợp lệ: e phải nằm trong khoảng từ 1 đến 1000!");
+    return;
+  }
+
+  // Kiểm tra tính chất RSA: d là nghịch đảo modulo của e
+  // Vì không có phi trực tiếp, ta kiểm tra bằng cách giả lập với một giá trị hash mẫu
+  const testValue = 5n; // Giá trị mẫu nhỏ hơn n
+  const signedTest = (testValue ** d) % n;
+  const verifiedTest = (signedTest ** e) % n;
+  if (verifiedTest !== testValue) {
+    document.getElementById('signature_result').innerHTML =
+      `❌ Cặp khóa không hợp lệ. Không thể tạo chữ ký.`;
     return;
   }
 
